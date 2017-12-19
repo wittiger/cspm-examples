@@ -1,0 +1,10 @@
+channel a, b, c, d
+
+
+
+P = a -> P
+
+Q = a -> a -> Q
+
+assert Q [T= P
+

@@ -1,0 +1,11 @@
+
+channel a , b, c, d
+
+A = a -> STOP
+C = b -> d -> A
+B = a -> STOP
+D = c -> a -> STOP
+
+--  assert B [T= C
+assert B [T= A
+--  assert D [T= A

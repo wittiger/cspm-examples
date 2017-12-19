@@ -1,0 +1,83 @@
+channel dr_low, dr_high
+channel v_stateA_is_0, v_stateA_is_1, v_stateA_set
+channel v_stateB_is_0, v_stateB_is_1, v_stateB_set
+
+--  NO-DR !
+
+ENV = V_stateA_UNDEF ||| V_stateB_UNDEF
+
+
+V_stateA_UNDEF = V_stateA_1 [] V_stateA_0
+
+V_stateA_1 = v_stateA_is_1 -> V_stateA_1  []  v_stateA_set -> V_stateA_UNDEF
+V_stateA_0 = v_stateA_is_0 -> V_stateA_0  []  v_stateA_set -> V_stateA_UNDEF
+
+V_stateB_UNDEF = V_stateB_1 [] V_stateB_0
+
+V_stateB_1 = v_stateB_is_1 -> V_stateB_1  []  v_stateB_set -> V_stateB_UNDEF
+V_stateB_0 = v_stateB_is_0 -> V_stateB_0  []  v_stateB_set -> V_stateB_UNDEF
+
+channel a, c, b, y, x
+
+--  BG
+--  Only does anything when stateA is 0 (and then blocks both threads)
+P_BG_HIGHEST = v_stateA_is_0 -> P_HIGHEST_INT ; v_stateA_set -> v_stateA_is_1 -> SKIP
+P_BG_HIGH    = v_stateA_is_0 -> P_HIGH_INT ; v_stateA_set -> v_stateA_is_1 -> P_HIGH_INT ; v_stateA_set -> v_stateA_is_0 -> SKIP
+P_BG_MID     = v_stateA_set -> v_stateA_is_1 -> P_MID_INT ; v_stateA_set -> v_stateA_is_0 -> SKIP
+
+P_BG_HIGHEST_STAR = P_BG_HIGHEST ; P_BG_HIGHEST_STAR  |~|  SKIP
+P_BG_HIGH_STAR    = P_BG_HIGH    ; P_BG_HIGH_STAR     |~|  SKIP
+P_BG_MID_STAR     = P_BG_MID     ; P_BG_MID_STAR      |~|  SKIP
+
+P_LOW_INT      = (P_BG_MID |~| P_BG_HIGH |~| P_BG_HIGHEST) ; P_LOW_INT |~| SKIP
+P_MID_INT      = (P_BG_HIGH |~| P_BG_HIGHEST) ; P_MID_INT              |~| SKIP
+P_HIGH_INT     = P_BG_HIGHEST_STAR
+P_HIGHEST_INT  = SKIP
+
+A = STOP
+B = STOP
+C = STOP
+
+TEST = A |~| STOP |~| B |~| (STOP |~| C) |~| STOP
+
+--  assert TEST [T= STOP
+--  assert STOP [T= TEST
+
+
+--  Low locks on stateB and never releases the lock, yet that is not protection
+
+P_LOW = v_stateA_is_0 -> P_LOW_INT ; v_stateA_set -> v_stateA_is_1 -> P_LOW_INT ; v_stateA_set -> v_stateA_is_1 -> P_LOW_INT ; dr_low -> P_HIGH
+
+
+P_HIGH = P_HIGH_INT ; v_stateA_is_0 -> P_HIGH_INT ; v_stateA_set -> v_stateA_is_1 -> dr_high -> STOP
+
+
+
+
+P = (P_LOW [|{v_stateA_is_0,v_stateA_is_1,v_stateA_set,v_stateB_is_0, v_stateB_is_1, v_stateB_set}|] ENV) \ {v_stateA_is_0,v_stateA_is_1,v_stateA_set,v_stateB_is_0, v_stateB_is_1, v_stateB_set}
+
+
+
+SPEC = dr_low -> dr_high -> STOP
+
+R = STOP \ {a, b, c}
+
+ON = STOP
+
+PR = ON |~| a -> STOP
+
+ONLY_A = a -> b -> STOP \ {b}
+
+TESTJ = a -> SKIP ; ON
+
+
+
+--  assert PR [T= ONLY_A
+assert ONLY_A [T= PR
+
+--  assert P [T=  SPEC
+--  assert TESTJ [T=  SPEC
+
+
+
+

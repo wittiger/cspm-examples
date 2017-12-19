@@ -1,0 +1,4 @@
+P1 = STOP
+P2 = STOP
+
+assert P2 [T= P1

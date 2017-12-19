@@ -1,0 +1,30 @@
+channel a, b, c, d
+
+A = a -> SKIP
+
+B = b -> SKIP
+
+C = c -> SKIP
+
+CC = c -> C
+
+
+CCC = c -> c -> c -> SKIP
+
+
+P = A ; B ; A; A; C; A; CC ; SKIP
+
+
+Q = P; A; CC; A ; C ; b -> P ; CCC
+
+QQ = Q ; P ; Q ; Q ; P ; Q
+QQQ = Q ; P ; Q ; Q ; P ; Q
+QQQQ = QQ ; P ; QQ ; QQ ; P ; QQ
+QQQQQ = QQ ; P ; QQ ; QQ ; P ; QQ
+QQQQQQ = QQQ ; P ; QQQ ; QQQ ; P ; QQQ
+QQQQQQQ = QQQQ ; P ; QQQQ ; QQQQ ; P ; QQQQQ
+QQQQQQQQ = QQQQ ; P ; QQQQQ ; QQQQQ ; P ; QQQQ
+QQQQQQQQQ = QQQQQQ ; P ; QQQQQQ ; QQQQQQ ; P ; QQQQQQQQ
+QQQQQQQQQQ = QQQQQQ ; P ; QQQQQQQQ ; QQQQQQQQQ ; P ; QQQQQQ
+
+assert QQQQQQQQQ [T= QQQQQQQQ

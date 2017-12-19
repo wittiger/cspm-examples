@@ -1,0 +1,9 @@
+channel c2, c1
+
+P1 = c1 -> STOP
+
+P2 = c2 -> STOP
+
+P3 = P1 |~| P2
+
+assert P1 [T= P3

@@ -1,0 +1,8 @@
+
+channel a, b
+
+P = (a -> P ; SKIP) |~| (b -> SKIP)
+
+ATHENB = (a -> ATHENB) |~| (b -> SKIP)
+
+assert P [T= ATHENB

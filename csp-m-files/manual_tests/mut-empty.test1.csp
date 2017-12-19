@@ -1,0 +1,6 @@
+channel a, b, c
+
+A = SKIP ; B
+B = A
+
+assert A [T= STOP

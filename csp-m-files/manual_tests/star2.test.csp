@@ -1,0 +1,20 @@
+
+channel a , b, c, d
+
+A = (R ; A) |~| SKIP
+
+B = (R ; B) |~| SKIP
+
+
+
+
+
+P = c -> a -> SKIP
+Q = b -> a -> c -> SKIP
+R = c -> a -> a -> SKIP
+S = d -> a -> a -> SKIP
+T = d -> SKIP
+
+
+assert B [T= A
+

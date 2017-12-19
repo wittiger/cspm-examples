@@ -1,0 +1,43 @@
+channel a, b, c, d
+
+A = a -> SKIP
+
+B = b -> SKIP
+
+C = c -> SKIP
+
+CC = c -> C
+
+
+CCC = c -> c -> c -> SKIP
+
+
+P = A ; B ; A; A; C; A; CC ; SKIP
+
+
+Q = P; A; CC; A ; C ; b -> P ; CCC
+
+QQ = Q ; P ; Q ; Q ; P ; Q
+QQQ = Q ; P ; Q ; Q ; P ; Q
+QQQQ = QQ ; P ; QQ ; QQ ; P ; QQ
+QQQQQ = QQ ; P ; QQ ; QQ ; P ; QQ
+QQQQQQ = QQQ ; P ; QQQ ; QQQ ; P ; QQQ
+QQQQQQQ = QQQQ ; P ; QQQQ ; QQQQ ; P ; QQQQQ
+QQQQQQQQ = QQQQ ; P ; QQQQQ ; QQQQQ ; P ; QQQQ
+QQQQQQQQQ = QQQQQQ ; P ; QQQQQQ ; QQQQQQ ; P ; QQQQQQQQ
+QQQQQQQQQQ = QQQQQQ ; P ; QQQQQQQQ ; QQQQQQQQQ ; P ; QQQQQQ
+
+
+Z = P; A; CC; A ; C ; b -> P ; CCC
+
+ZZ = Z ; P ; Z ; Z ; P ; Z
+ZZZ = Z ; P ; Z ; Z ; P ; Z
+ZZZZ = ZZ ; P ; ZZ ; ZZ ; P ; ZZ
+ZZZZZ = ZZ ; P ; ZZ ; ZZ ; P ; ZZ
+ZZZZZZ = ZZZ ; P ; ZZZ ; ZZZ ; P ; ZZZ
+ZZZZZZZ = ZZZZ ; P ; ZZZZ ; ZZZZ ; P ; ZZZZZ
+ZZZZZZZZ = ZZZZ ; P ; ZZZZZ ; ZZZZZ ; P ; ZZZZ
+ZZZZZZZZZ = ZZZZZZ ; P ; ZZZZZZ ; ZZZZZZ ; P ; ZZZZZZZZ
+ZZZZZZZZZZ = ZZZZZZ ; P ; ZZZZZZZZ ; ZZZZZZZZZ ; P ; ZZZZZZ
+
+assert ZZZZZZZZZ [T= QQQQQQQQQ

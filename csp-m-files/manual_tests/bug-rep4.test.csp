@@ -1,0 +1,19 @@
+channel is_23_o38__f, isnot_23_o38__f, set__o38__f__to__1, dr_low, dr_high
+
+O38__F_UNKNOWN = (O38__F_1 |~| O38__F_23 |~| O38__F_OTHER)
+
+O38__F_SET = set__o38__f__to__1 -> O38__F_1
+
+O38__F_1 = O38__F_SET |~| isnot_23_o38__f -> O38__F_1
+O38__F_23 = is_23_o38__f -> O38__F_23 |~| O38__F_SET
+O38__F_OTHER = isnot_23_o38__f -> O38__F_OTHER
+
+C340_B312 = is_23_o38__f -> C340_B321 |~| isnot_23_o38__f -> C340_B312
+C340_B321 = dr_low -> STOP
+
+C339_B293 = (is_23_o38__f -> dr_high -> STOP |~| isnot_23_o38__f -> SKIP)
+
+TASK_3 = (C340_B312 [|{is_23_o38__f, isnot_23_o38__f, set__o38__f__to__1}|] O38__F_UNKNOWN)  \ {is_23_o38__f, isnot_23_o38__f }
+INT_TASK_3 = ((SKIP |~| C339_B293) ; INT_TASK_3) |~| SKIP
+
+assert dr_low -> STOP [T= TASK_3

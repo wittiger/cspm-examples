@@ -1,0 +1,32 @@
+channel a, b
+
+
+P = a -> SKIP
+
+Q = b -> SKIP
+
+P_STAR = P ; P_STAR  |~|  SKIP
+
+PQ_STAR = (P |~| Q) ; PQ_STAR |~| SKIP
+
+BA = a -> PQ_STAR ; b -> PQ_STAR
+CA = BA ; SUCC_AB ; SUCC_AB ; b -> P_STAR
+DA = a -> a -> a -> PQ_STAR
+
+STAR = (P |~| Q |~| DA |~| CA |~| (BA ; DA)) ; STAR |~| SKIP
+
+
+SUCC_A  = a -> SUCC_A  |~|  SKIP
+SUCC_AB = a -> SUCC_AB  |~|  b -> SUCC_AB  |~|  SKIP
+
+
+
+SPEC = SUCC_A
+
+TEST = SKIP ||| P
+
+
+assert SUCC_AB [T= PQ_STAR
+--  assert PQ_STAR [T= STAR
+
+

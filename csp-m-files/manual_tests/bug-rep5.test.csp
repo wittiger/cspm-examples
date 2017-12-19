@@ -1,0 +1,13 @@
+channel a, b, c, d
+
+P = Q |~| R |~| S |~| c -> Q
+
+Q = c -> Q |~| b -> Q
+R = a -> R
+S = b -> S
+
+X = a -> d -> STOP |~| b -> X
+
+Y = (X [|{a, b, c}|] P)  \ {a, b}
+
+assert d -> STOP [T= Y

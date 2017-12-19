@@ -1,0 +1,6 @@
+channel a
+
+P1 = STOP
+P2 = a -> STOP
+
+assert P2 [T= P1

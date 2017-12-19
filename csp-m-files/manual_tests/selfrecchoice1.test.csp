@@ -1,0 +1,14 @@
+
+channel a , b, c, d
+
+A = a -> STOP
+C = b -> d -> A
+B = a -> STOP
+D = c -> a -> STOP
+
+P = A |~| C
+Q = B |~| D
+
+
+assert P [T= Q
+

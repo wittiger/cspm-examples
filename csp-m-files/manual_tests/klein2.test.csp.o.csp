@@ -1,0 +1,15 @@
+
+
+--  Neu
+transparent explicate
+transparent tau_loop_factor
+transparent sbisim
+transparent diamond
+transparent model_compress
+
+
+channel a
+
+P_TMP_501 = ((a -> STOP)  |~|  SKIP)
+P_TMP_504 = ((P_TMP_501 ; STOP)  |~|  SKIP)
+assert P_TMP_504 [T= P_TMP_501

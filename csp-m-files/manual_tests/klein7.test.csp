@@ -1,0 +1,11 @@
+channel a, b, c, d
+
+P  = a -> STOP  |~|  SKIP
+
+Q = P ; STOP  |~|  SKIP
+
+R = SKIP  |~|  P ; STOP
+
+T = a -> b -> c -> Q
+
+assert SKIP [T= P

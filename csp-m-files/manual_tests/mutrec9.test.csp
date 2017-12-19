@@ -1,0 +1,18 @@
+channel a, b, c
+
+JUSTA = a -> SKIP
+JUSTB = b -> SKIP
+JUSTC = c -> SKIP
+
+RUNABC = ((JUSTA |~| JUSTB |~| JUSTC) ; RUNABC) |~| SKIP
+
+RUNA = a -> RUNA
+
+RA = a -> RB
+RB = a -> RA
+
+C1 = (JUSTA ; C2) |~| C2
+C2 = (JUSTB ; C3) |~| C3
+C3 = (JUSTC; C1) |~| C1
+
+assert RUNABC [T= C1
