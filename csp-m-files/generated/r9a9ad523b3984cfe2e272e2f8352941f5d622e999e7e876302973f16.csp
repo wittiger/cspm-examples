@@ -1,0 +1,137 @@
+--  Printing for q
+
+--  Variable o45__hw_loop_status
+
+channel is_3_o45__hw_loop_status
+channel isnot_3_o45__hw_loop_status
+channel set__o45__hw_loop_status__to__0, set__o45__hw_loop_status__to__3, set__o45__hw_loop_status__to__UNKNOWN
+
+
+O45__HW_LOOP_STATUS_UNKNOWN = (O45__HW_LOOP_STATUS_0 |~| O45__HW_LOOP_STATUS_3 |~| O45__HW_LOOP_STATUS_OTHER |~| O45__HW_LOOP_STATUS_UNKNOWN)
+
+O45__HW_LOOP_STATUS_SET = (STOP |~| (set__o45__hw_loop_status__to__0 -> O45__HW_LOOP_STATUS_0) |~| (set__o45__hw_loop_status__to__3 -> O45__HW_LOOP_STATUS_3) |~| (set__o45__hw_loop_status__to__UNKNOWN -> O45__HW_LOOP_STATUS_UNKNOWN))
+
+O45__HW_LOOP_STATUS_0 = (O45__HW_LOOP_STATUS_SET |~| isnot_3_o45__hw_loop_status -> O45__HW_LOOP_STATUS_0)
+O45__HW_LOOP_STATUS_3 = (is_3_o45__hw_loop_status -> O45__HW_LOOP_STATUS_3 |~| O45__HW_LOOP_STATUS_SET |~| STOP)
+O45__HW_LOOP_STATUS_OTHER = (O45__HW_LOOP_STATUS_SET |~| isnot_3_o45__hw_loop_status -> O45__HW_LOOP_STATUS_OTHER)
+
+
+--  start of file
+
+--  in TGI 6  Prio 0
+C357_B246 = C357_B248
+C357_B248 = C358_B258 ; C359_B314 ; C360_B252 ; C357_B247
+C357_B247 = SKIP
+
+C354_B284 = C354_B286
+C354_B286 = (is_3_o45__hw_loop_status -> INT_TGI_2 ; C354_B288 |~| isnot_3_o45__hw_loop_status -> INT_TGI_2 ; C354_B287)
+C354_B288 = C354_B289
+--  in TGI 2  Prio 4
+C354_B287 = C354_B289
+C354_B289 = C362_B264 ; (C354_B290 |~| C354_B292)
+C354_B290 = C362_B264 ; (set__o45__hw_loop_status__to__UNKNOWN -> SKIP ; INT_TGI_2) ; C354_B292
+--  in TGI 2  Prio 4
+C354_B292 = C362_B264 ; (C354_B293 |~| C354_B295)
+C354_B293 = ((dr_low -> INT_TGI_2 ; STOP)  |~| SKIP) ; (set__o45__hw_loop_status__to__3 -> SKIP ; INT_TGI_2) ; C354_B295
+C354_B295 = C354_B285
+C354_B285 = SKIP
+
+C355_B335 = C355_B337
+C355_B337 = C361_B307 ; C355_B336
+--  in TGI 1  Prio 5
+C355_B336 = SKIP
+
+C362_B264 = C362_B266
+C362_B266 = C362_B265
+--  in TGI 2  Prio 4
+C362_B265 = SKIP
+
+C361_B307 = C361_B309
+C361_B309 = C361_B308
+C361_B308 = SKIP
+
+C359_B314 = C359_B316
+C359_B316 = C359_B315
+--  in TGI 6  Prio 0
+C359_B315 = SKIP
+
+C360_B252 = C360_B254
+C360_B254 = C360_B253
+--  in TGI 6  Prio 0
+C360_B253 = SKIP
+
+C353_B321 = C353_B323
+C353_B323 = C353_B322
+C353_B322 = SKIP
+
+C356_B328 = C356_B330
+C356_B330 = C356_B329
+--  in TGI 3  Prio 3
+C356_B329 = SKIP
+
+C358_B258 = C358_B260
+C358_B260 = ((dr_high -> INT_TGI_6 ; STOP)  |~| SKIP) ; (set__o45__hw_loop_status__to__0 -> SKIP ; INT_TGI_6) ; C358_B259
+--  in TGI 6  Prio 0
+C358_B259 = SKIP
+
+C352_B271 = C352_B273
+C352_B273 = (is_3_o45__hw_loop_status -> INT_TGI_4 ; C352_B275 |~| isnot_3_o45__hw_loop_status -> INT_TGI_4 ; C352_B274)
+C352_B275 = C352_B276
+C352_B274 = C352_B276
+C352_B276 = C352_B272
+--  in TGI 4  Prio 2
+C352_B272 = SKIP
+TASK_TGI_4 = TASK_2
+INT_TGI_4 = INT_TASK_2
+TASK_2_ENTRY = C352_B271
+TASK_2 = TASK_2_ENTRY
+INT_TASK_2 = ((INT_TASK_1 |~| TASK_1) ; INT_TASK_2) |~| SKIP
+
+TASK_TGI_5 = TASK_1
+INT_TGI_5 = INT_TASK_1
+TASK_1_ENTRY = C353_B321
+TASK_1 = TASK_1_ENTRY
+INT_TASK_1 = ((INT_TASK_0 |~| TASK_0) ; INT_TASK_1) |~| SKIP
+
+TASK_TGI_2 = TASK_4
+INT_TGI_2 = INT_TASK_4
+TASK_4_ENTRY = C354_B284
+TASK_4 = TASK_4_ENTRY
+INT_TASK_4 = ((INT_TASK_3 |~| TASK_3) ; INT_TASK_4) |~| SKIP
+
+TASK_TGI_1 = TASK_5
+INT_TGI_1 = INT_TASK_5
+TASK_5_ENTRY = C355_B335
+TASK_5 = TASK_5_ENTRY
+INT_TASK_5 = ((INT_TASK_4 |~| TASK_4) ; INT_TASK_5) |~| SKIP
+
+TASK_TGI_3 = TASK_3
+INT_TGI_3 = INT_TASK_3
+TASK_3_ENTRY = C356_B328
+TASK_3 = TASK_3_ENTRY
+INT_TASK_3 = ((INT_TASK_2 |~| TASK_2) ; INT_TASK_3) |~| SKIP
+
+TASK_TGI_6 = SKIP
+INT_TGI_6 = INT_TASK_0
+TASK_0_ENTRY = SKIP
+TASK_0 = SKIP
+INT_TASK_0 = SKIP
+
+PROG1 = (PROG0 [|{is_3_o45__hw_loop_status, isnot_3_o45__hw_loop_status, set__o45__hw_loop_status__to__0, set__o45__hw_loop_status__to__3, set__o45__hw_loop_status__to__UNKNOWN}|] O45__HW_LOOP_STATUS_UNKNOWN)  \ {is_3_o45__hw_loop_status, isnot_3_o45__hw_loop_status, set__o45__hw_loop_status__to__0, set__o45__hw_loop_status__to__3, set__o45__hw_loop_status__to__UNKNOWN}
+PROG0 = TASK_4
+PROG = PROG1
+
+
+
+--  DR-Check:
+
+channel dr_low, dr_high
+
+RUNAB = dr_low -> RUNAB  |~|  dr_high -> RUNAB
+NODR = STOP |~| dr_low -> STOP |~| dr_low -> dr_low -> RUNAB |~| dr_high -> RUNAB
+
+assert NODR [T= PROG
+--  when this passes the Data-Race is excluded
+
+
+--  Parsing has completed succesfully.

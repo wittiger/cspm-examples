@@ -1,0 +1,135 @@
+--  Printing for v
+
+--  Variable o37__s1
+
+channel is_0_o37__s1
+channel isnot_0_o37__s1
+channel set__o37__s1__to__0, set__o37__s1__to__1
+
+
+O37__S1_UNKNOWN = (O37__S1_0 |~| O37__S1_1 |~| O37__S1_OTHER)
+
+O37__S1_SET = (STOP |~| (set__o37__s1__to__0 -> O37__S1_0) |~| (set__o37__s1__to__1 -> O37__S1_1))
+
+O37__S1_0 = (is_0_o37__s1 -> O37__S1_0 |~| O37__S1_SET |~| STOP)
+O37__S1_1 = (O37__S1_SET |~| isnot_0_o37__s1 -> O37__S1_1)
+O37__S1_OTHER = (O37__S1_SET |~| isnot_0_o37__s1 -> O37__S1_OTHER)
+
+
+--  Variable o38__skip2
+
+channel is_0_o38__skip2
+channel isnot_0_o38__skip2
+channel set__o38__skip2__to__0, set__o38__skip2__to__1
+
+
+O38__SKIP2_UNKNOWN = (O38__SKIP2_0 |~| O38__SKIP2_1 |~| O38__SKIP2_OTHER)
+
+O38__SKIP2_SET = (STOP |~| (set__o38__skip2__to__0 -> O38__SKIP2_0) |~| (set__o38__skip2__to__1 -> O38__SKIP2_1))
+
+O38__SKIP2_0 = (is_0_o38__skip2 -> O38__SKIP2_0 |~| O38__SKIP2_SET |~| STOP)
+O38__SKIP2_1 = (O38__SKIP2_SET |~| isnot_0_o38__skip2 -> O38__SKIP2_1)
+O38__SKIP2_OTHER = (O38__SKIP2_SET |~| isnot_0_o38__skip2 -> O38__SKIP2_OTHER)
+
+
+--  start of file
+
+--  in TGI 4  Prio 0
+C385_B282 = C385_B284
+C385_B284 = C386_B294 ; C387_B348 ; C388_B288 ; C385_B283
+C385_B283 = SKIP
+
+C382_B355 = C382_B357
+C382_B357 = C391_B331 ; C382_B356
+C382_B356 = SKIP
+
+--  in TGI 1  Prio 3
+C384_B369 = C384_B371
+C384_B371 = C389_B307 ; C384_B370
+C384_B370 = SKIP
+
+--  in TGI 2  Prio 2
+C383_B362 = C383_B364
+C383_B364 = C390_B314 ; C383_B363
+C383_B363 = SKIP
+
+C389_B307 = C389_B309
+C389_B309 = (set__o37__s1__to__1 -> SKIP ; INT_TGI_1) ; (set__o37__s1__to__0 -> SKIP ; INT_TGI_1) ; (set__o38__skip2__to__1 -> SKIP ; INT_TGI_1) ; (set__o38__skip2__to__0 -> SKIP ; INT_TGI_1) ; C389_B308
+C389_B308 = SKIP
+
+--  in TGI 2  Prio 2
+C390_B314 = C390_B316
+C390_B316 = (is_0_o37__s1 -> INT_TGI_2 ; C390_B317 |~| isnot_0_o37__s1 -> INT_TGI_2 ; C390_B319)
+C390_B317 = C390_B319
+--  in TGI 2  Prio 2
+C390_B319 = (is_0_o38__skip2 -> INT_TGI_2 ; C390_B320 |~| isnot_0_o38__skip2 -> INT_TGI_2 ; C390_B322)
+C390_B320 = ((dr_low -> INT_TGI_2 ; STOP)  |~| SKIP) ; C390_B322
+C390_B322 = C390_B315
+C390_B315 = SKIP
+
+C387_B348 = C387_B350
+C387_B350 = C387_B349
+--  in TGI 4  Prio 0
+C387_B349 = SKIP
+
+C388_B288 = C388_B290
+C388_B290 = C388_B289
+--  in TGI 4  Prio 0
+C388_B289 = SKIP
+
+C391_B331 = C391_B333
+C391_B333 = (is_0_o37__s1 -> INT_TGI_3 ; C391_B334 |~| isnot_0_o37__s1 -> INT_TGI_3 ; C391_B339)
+C391_B334 = (is_0_o38__skip2 -> INT_TGI_3 ; C391_B336 |~| isnot_0_o38__skip2 -> INT_TGI_3 ; C391_B338)
+C391_B336 = ((dr_high -> INT_TGI_3 ; STOP)  |~| SKIP) ; C391_B338
+C391_B338 = C391_B339
+--  in TGI 3  Prio 1
+C391_B339 = C391_B332
+C391_B332 = SKIP
+
+C386_B294 = C386_B296
+--  in TGI 4  Prio 0
+C386_B296 = C386_B295
+C386_B295 = SKIP
+TASK_TGI_3 = TASK_1
+INT_TGI_3 = INT_TASK_1
+TASK_1_ENTRY = C382_B355
+TASK_1 = TASK_1_ENTRY
+INT_TASK_1 = ((INT_TASK_0 |~| TASK_0) ; INT_TASK_1) |~| SKIP
+
+TASK_TGI_2 = TASK_2
+INT_TGI_2 = INT_TASK_2
+TASK_2_ENTRY = C383_B362
+TASK_2 = TASK_2_ENTRY
+INT_TASK_2 = ((INT_TASK_1 |~| TASK_1) ; INT_TASK_2) |~| SKIP
+
+TASK_TGI_1 = TASK_3
+INT_TGI_1 = INT_TASK_3
+TASK_3_ENTRY = C384_B369
+TASK_3 = TASK_3_ENTRY
+INT_TASK_3 = ((INT_TASK_2 |~| TASK_2) ; INT_TASK_3) |~| SKIP
+
+TASK_TGI_4 = TASK_0
+INT_TGI_4 = INT_TASK_0
+TASK_0_ENTRY = C385_B282
+TASK_0 = TASK_0_ENTRY
+INT_TASK_0 = SKIP
+
+PROG1 = (PROG0 [|{is_0_o37__s1, isnot_0_o37__s1, set__o37__s1__to__0, set__o37__s1__to__1}|] O37__S1_UNKNOWN)  \ {is_0_o37__s1, isnot_0_o37__s1, set__o37__s1__to__0, set__o37__s1__to__1}
+PROG2 = (PROG1 [|{is_0_o38__skip2, isnot_0_o38__skip2, set__o38__skip2__to__0, set__o38__skip2__to__1}|] O38__SKIP2_UNKNOWN)  \ {is_0_o38__skip2, isnot_0_o38__skip2, set__o38__skip2__to__0, set__o38__skip2__to__1}
+PROG0 = TASK_2
+PROG = PROG2
+
+
+
+--  DR-Check:
+
+channel dr_low, dr_high
+
+RUNAB = dr_low -> RUNAB  |~|  dr_high -> RUNAB
+NODR = STOP |~| dr_low -> STOP |~| dr_low -> dr_low -> RUNAB |~| dr_high -> RUNAB
+
+assert NODR [T= PROG
+--  when this passes the Data-Race is excluded
+
+
+--  Parsing has completed succesfully.

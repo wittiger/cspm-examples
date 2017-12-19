@@ -1,0 +1,116 @@
+--  Printing for n
+
+--  Variable o31__a
+
+channel is_0_o31__a
+channel isnot_0_o31__a
+channel set__o31__a__to__0, set__o31__a__to__1
+
+
+O31__A_UNKNOWN = (O31__A_0 |~| O31__A_1 |~| O31__A_OTHER)
+
+O31__A_SET = (STOP |~| (set__o31__a__to__0 -> O31__A_0) |~| (set__o31__a__to__1 -> O31__A_1))
+
+O31__A_0 = (is_0_o31__a -> O31__A_0 |~| O31__A_SET |~| STOP)
+O31__A_1 = (O31__A_SET |~| isnot_0_o31__a -> O31__A_1)
+O31__A_OTHER = (O31__A_SET |~| isnot_0_o31__a -> O31__A_OTHER)
+
+
+--  start of file
+
+--  in TGI 4  Prio 0
+C369_B257 = C369_B259
+C369_B259 = C370_B269 ; C371_B332 ; C372_B263 ; C369_B258
+C369_B258 = SKIP
+
+C366_B346 = C366_B348
+C366_B348 = C374_B305 ; C366_B347
+C366_B347 = SKIP
+
+--  in TGI 1  Prio 3
+C368_B353 = C368_B355
+C368_B355 = C373_B275 ; C368_B354
+C368_B354 = SKIP
+
+--  in TGI 2  Prio 2
+C374_B305 = C374_B308
+C374_B308 = C374_B310
+C374_B310 = (is_0_o31__a -> C374_B313 |~| isnot_0_o31__a -> C374_B310)
+C374_B313 = (set__o31__a__to__1 -> SKIP ; INT_TGI_2) ; C374_B317
+C374_B317 = (C374_B320 |~| C374_B322)
+C374_B320 = C374_B322
+--  in TGI 2  Prio 2
+C374_B322 = C374_B306
+C374_B306 = SKIP
+
+C373_B275 = C373_B278
+--  in TGI 1  Prio 3
+C373_B278 = C373_B280
+C373_B280 = (is_0_o31__a -> C373_B283 |~| isnot_0_o31__a -> C373_B280)
+C373_B283 = (set__o31__a__to__1 -> SKIP ; INT_TGI_1) ; C373_B287
+C373_B287 = ((dr_low -> INT_TGI_1 ; STOP)  |~| SKIP) ; C373_B290
+C373_B290 = (set__o31__a__to__0 -> SKIP ; INT_TGI_1) ; C373_B293
+C373_B293 = C373_B276
+--  in TGI 1  Prio 3
+C373_B276 = SKIP
+
+C371_B332 = C371_B334
+C371_B334 = C371_B333
+--  in TGI 4  Prio 0
+C371_B333 = SKIP
+
+C372_B263 = C372_B265
+C372_B265 = C372_B264
+C372_B264 = SKIP
+
+C367_B339 = C367_B341
+C367_B341 = C367_B340
+--  in TGI 3  Prio 1
+C367_B340 = SKIP
+
+C370_B269 = C370_B271
+C370_B271 = ((dr_high -> INT_TGI_4 ; STOP)  |~| SKIP) ; C370_B270
+--  in TGI 4  Prio 0
+C370_B270 = SKIP
+TASK_TGI_2 = TASK_2
+INT_TGI_2 = INT_TASK_2
+TASK_2_ENTRY = C366_B346
+TASK_2 = TASK_2_ENTRY
+INT_TASK_2 = ((INT_TASK_1 |~| TASK_1) ; INT_TASK_2) |~| SKIP
+
+TASK_TGI_3 = TASK_1
+INT_TGI_3 = INT_TASK_1
+TASK_1_ENTRY = C367_B339
+TASK_1 = TASK_1_ENTRY
+INT_TASK_1 = ((INT_TASK_0 |~| TASK_0) ; INT_TASK_1) |~| SKIP
+
+TASK_TGI_1 = TASK_3
+INT_TGI_1 = INT_TASK_3
+TASK_3_ENTRY = C368_B353
+TASK_3 = TASK_3_ENTRY
+INT_TASK_3 = ((INT_TASK_2 |~| TASK_2) ; INT_TASK_3) |~| SKIP
+
+TASK_TGI_4 = TASK_0
+INT_TGI_4 = INT_TASK_0
+TASK_0_ENTRY = C369_B257
+TASK_0 = TASK_0_ENTRY
+INT_TASK_0 = SKIP
+
+PROG1 = (PROG0 [|{is_0_o31__a, isnot_0_o31__a, set__o31__a__to__0, set__o31__a__to__1}|] O31__A_UNKNOWN)  \ {is_0_o31__a, isnot_0_o31__a, set__o31__a__to__0, set__o31__a__to__1}
+PROG0 = TASK_3
+PROG = PROG1
+
+
+
+--  DR-Check:
+
+channel dr_low, dr_high
+
+RUNAB = dr_low -> RUNAB  |~|  dr_high -> RUNAB
+NODR = STOP |~| dr_low -> STOP |~| dr_low -> dr_low -> RUNAB |~| dr_high -> RUNAB
+
+assert NODR [T= PROG
+--  when this passes the Data-Race is excluded
+
+
+--  Parsing has completed succesfully.

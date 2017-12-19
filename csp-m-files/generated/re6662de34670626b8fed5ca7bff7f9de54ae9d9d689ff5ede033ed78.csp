@@ -1,0 +1,129 @@
+--  Variable o39__a
+
+channel set__o39__a__to__0, set__o39__a__to__1
+
+
+O39__A_UNKNOWN = (O39__A_0 |~| O39__A_1 |~| O39__A_OTHER)
+
+O39__A_SET = (STOP |~| (set__o39__a__to__0 -> O39__A_0) |~| (set__o39__a__to__1 -> O39__A_1))
+
+O39__A_0 = (O39__A_SET |~| STOP)
+O39__A_1 = (O39__A_SET |~| STOP)
+O39__A_OTHER = (O39__A_SET |~| STOP)
+
+
+--  Variable o40__b
+
+channel set__o40__b__to__0, set__o40__b__to__1
+
+
+O40__B_UNKNOWN = (O40__B_0 |~| O40__B_1 |~| O40__B_OTHER)
+
+O40__B_SET = (STOP |~| (set__o40__b__to__0 -> O40__B_0) |~| (set__o40__b__to__1 -> O40__B_1))
+
+O40__B_0 = (O40__B_SET |~| STOP)
+O40__B_1 = (O40__B_SET |~| STOP)
+O40__B_OTHER = (O40__B_SET |~| STOP)
+
+
+--  Variable o41__c
+
+channel set__o41__c__to__0, set__o41__c__to__1
+
+
+O41__C_UNKNOWN = (O41__C_0 |~| O41__C_1 |~| O41__C_OTHER)
+
+O41__C_SET = (STOP |~| (set__o41__c__to__0 -> O41__C_0) |~| (set__o41__c__to__1 -> O41__C_1))
+
+O41__C_0 = (O41__C_SET |~| STOP)
+O41__C_1 = (O41__C_SET |~| STOP)
+O41__C_OTHER = (O41__C_SET |~| STOP)
+
+
+--  start of file
+
+C401_B282 = C401_B284
+C401_B284 = C402_B296 ; C403_B337 ; C401_B285
+C401_B285 = C404_B290 ; C401_B283
+C401_B283 = SKIP
+
+C400_B359 = C400_B361
+C400_B361 = (set__o39__a__to__0 -> SKIP ; INT_TGI_1) ; (set__o41__c__to__1 -> SKIP ; INT_TGI_1) ; C400_B362
+C400_B362 = (C400_B364 |~| C400_B365)
+C400_B364 = ((dr_low -> INT_TGI_1 ; STOP)  |~| SKIP) ; C406_B330 ; (C400_B368 |~| C400_B370)
+C400_B368 = (set__o40__b__to__1 -> SKIP ; INT_TGI_1) ; (set__o39__a__to__1 -> SKIP ; INT_TGI_1) ; (set__o41__c__to__0 -> SKIP ; INT_TGI_1) ; C400_B370
+C400_B370 = C400_B362
+C400_B365 = C400_B360
+C400_B360 = SKIP
+
+C403_B337 = C403_B339
+C403_B339 = C405_B302 ; C403_B346
+C403_B346 = C403_B338
+C403_B338 = SKIP
+
+C406_B330 = C406_B332
+C406_B332 = C406_B331
+C406_B331 = SKIP
+
+C405_B302 = C405_B304
+C405_B304 = C405_B303
+C405_B303 = SKIP
+
+C398_B380 = C398_B382
+C398_B382 = (C398_B383 |~| C398_B384)
+C398_B384 = (C398_B385 |~| C398_B387)
+C398_B385 = ((dr_high -> INT_TGI_3 ; STOP)  |~| SKIP) ; C398_B387
+C398_B387 = C398_B388
+C398_B383 = C398_B388
+C398_B388 = C398_B381
+C398_B381 = SKIP
+
+C404_B290 = C404_B292
+C404_B292 = C404_B291
+C404_B291 = SKIP
+
+C399_B352 = C399_B354
+C399_B354 = C399_B353
+C399_B353 = SKIP
+
+C402_B296 = C402_B298
+C402_B298 = (set__o39__a__to__1 -> SKIP ; INT_TGI_4) ; (set__o40__b__to__0 -> SKIP ; INT_TGI_4) ; (set__o41__c__to__0 -> SKIP ; INT_TGI_4) ; C402_B297
+C402_B297 = SKIP
+TASK_TGI_3 = TASK_1
+INT_TGI_3 = INT_TASK_1
+TASK_1_ENTRY = C398_B380
+TASK_1 = TASK_1_ENTRY
+INT_TASK_1 = ((INT_TASK_0 |~| TASK_0) ; INT_TASK_1) |~| SKIP
+
+TASK_TGI_2 = TASK_2
+INT_TGI_2 = INT_TASK_2
+TASK_2_ENTRY = C399_B352
+TASK_2 = TASK_2_ENTRY
+INT_TASK_2 = ((INT_TASK_1 |~| TASK_1) ; INT_TASK_2) |~| SKIP
+
+TASK_TGI_1 = TASK_3
+INT_TGI_1 = INT_TASK_3
+TASK_3_ENTRY = C400_B359
+TASK_3 = ((((((TASK_3_ENTRY) [|{set__o39__a__to__0, set__o39__a__to__1}|] O39__A_UNKNOWN)  \ {set__o39__a__to__0, set__o39__a__to__1}) [|{set__o40__b__to__0, set__o40__b__to__1}|] O40__B_UNKNOWN)  \ {set__o40__b__to__0, set__o40__b__to__1}) [|{set__o41__c__to__0, set__o41__c__to__1}|] O41__C_UNKNOWN)  \ {set__o41__c__to__0, set__o41__c__to__1}
+INT_TASK_3 = ((INT_TASK_2 |~| TASK_2) ; INT_TASK_3) |~| SKIP
+
+TASK_TGI_4 = TASK_0
+INT_TGI_4 = INT_TASK_0
+TASK_0_ENTRY = C401_B282
+TASK_0 = TASK_0_ENTRY
+INT_TASK_0 = SKIP
+
+
+
+--  DR-Check:
+
+channel dr_low, dr_high
+
+RUNAB = dr_low -> RUNAB  |~|  dr_high -> RUNAB
+NODR = STOP |~| dr_low -> STOP |~| dr_low -> dr_low -> RUNAB |~| dr_high -> RUNAB
+
+assert NODR [T= TASK_3
+--  when this passes the Data-Race is excluded
+
+
+--  Parsing has completed succesfully.

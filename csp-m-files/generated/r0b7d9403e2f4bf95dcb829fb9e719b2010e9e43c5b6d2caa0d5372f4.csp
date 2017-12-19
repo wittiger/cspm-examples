@@ -1,0 +1,97 @@
+--  Variable o38__f
+
+channel is_23_o38__f
+channel isnot_23_o38__f
+channel set__o38__f__to__1
+
+
+O38__F_UNKNOWN = (O38__F_1 |~| O38__F_23 |~| O38__F_OTHER)
+
+O38__F_SET = (STOP |~| (set__o38__f__to__1 -> O38__F_1))
+
+O38__F_1 = (O38__F_SET |~| isnot_23_o38__f -> O38__F_1)
+O38__F_23 = (is_23_o38__f -> O38__F_23 |~| O38__F_SET |~| STOP)
+O38__F_OTHER = (O38__F_SET |~| isnot_23_o38__f -> O38__F_OTHER)
+
+
+--  start of file
+
+C341_B223 = C341_B225
+C341_B225 = C342_B237 ; C343_B278 ; C341_B226
+C341_B226 = C344_B231 ; C341_B224
+C341_B224 = SKIP
+
+C343_B278 = C343_B280
+C343_B280 = C345_B243 ; C343_B287
+C343_B287 = C343_B279
+C343_B279 = SKIP
+
+C342_B237 = C342_B239
+C342_B239 = (set__o38__f__to__1 -> SKIP ; INT_TGI_4) ; C342_B238
+C342_B238 = SKIP
+
+C345_B243 = C345_B245
+C345_B245 = C345_B244
+C345_B244 = SKIP
+
+C340_B312 = C340_B315
+C340_B315 = C340_B317
+C340_B317 = (is_23_o38__f -> C340_B321 |~| isnot_23_o38__f -> C340_B323)
+C340_B321 = ((dr_low -> INT_TGI_1 ; STOP)  |~| SKIP) ; C340_B323
+C340_B323 = C340_B315
+C340_B318 = C340_B313
+C340_B313 = SKIP
+
+C344_B231 = C344_B233
+C344_B233 = C344_B232
+C344_B232 = SKIP
+
+C339_B293 = C339_B296
+C339_B296 = C339_B298
+C339_B298 = (is_23_o38__f -> C339_B302 |~| isnot_23_o38__f -> C339_B304)
+C339_B302 = ((dr_high -> INT_TGI_2 ; STOP)  |~| SKIP) ; C339_B304
+C339_B304 = C339_B296
+C339_B299 = C339_B294
+C339_B294 = SKIP
+
+C338_B331 = C338_B333
+C338_B333 = C338_B332
+C338_B332 = SKIP
+TASK_TGI_3 = TASK_1
+INT_TGI_3 = INT_TASK_1
+TASK_1_ENTRY = C338_B331
+TASK_1 = TASK_1_ENTRY
+INT_TASK_1 = ((INT_TASK_0 |~| TASK_0) ; INT_TASK_1) |~| SKIP
+
+TASK_TGI_2 = TASK_2
+INT_TGI_2 = INT_TASK_2
+TASK_2_ENTRY = C339_B293
+TASK_2 = TASK_2_ENTRY
+INT_TASK_2 = ((INT_TASK_1 |~| TASK_1) ; INT_TASK_2) |~| SKIP
+
+TASK_TGI_1 = TASK_3
+INT_TGI_1 = INT_TASK_3
+TASK_3_ENTRY = C340_B312
+TASK_3 = ((TASK_3_ENTRY) [|{is_23_o38__f, isnot_23_o38__f, set__o38__f__to__1}|] O38__F_UNKNOWN)  \ {is_23_o38__f, isnot_23_o38__f, set__o38__f__to__1}
+INT_TASK_3 = ((INT_TASK_2 |~| TASK_2) ; INT_TASK_3) |~| SKIP
+
+TASK_TGI_4 = TASK_0
+INT_TGI_4 = INT_TASK_0
+TASK_0_ENTRY = C341_B223
+TASK_0 = TASK_0_ENTRY
+INT_TASK_0 = SKIP
+
+
+
+--  DR-Check:
+
+channel dr_low, dr_high
+
+RUNAB = dr_low -> RUNAB  |~|  dr_high -> RUNAB
+NODR = STOP |~| dr_low -> STOP |~| dr_low -> dr_low -> RUNAB |~| dr_high -> RUNAB
+
+assert NODR [T= TASK_3
+--  when this passes the Data-Race is excluded
+
+
+--  Parsing has completed succesfully.

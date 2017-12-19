@@ -1,0 +1,150 @@
+--  Printing for G
+
+--  Variable o43__ignore_message
+
+channel is_0_o43__ignore_message
+channel isnot_0_o43__ignore_message
+channel set__o43__ignore_message__to__0, set__o43__ignore_message__to__1, set__o43__ignore_message__to__25, set__o43__ignore_message__to__UNKNOWN
+
+
+O43__IGNORE_MESSAGE_UNKNOWN = (O43__IGNORE_MESSAGE_0 |~| O43__IGNORE_MESSAGE_1 |~| O43__IGNORE_MESSAGE_25 |~| O43__IGNORE_MESSAGE_OTHER |~| O43__IGNORE_MESSAGE_UNKNOWN)
+
+O43__IGNORE_MESSAGE_SET = (STOP |~| (set__o43__ignore_message__to__0 -> O43__IGNORE_MESSAGE_0) |~| (set__o43__ignore_message__to__1 -> O43__IGNORE_MESSAGE_1) |~| (set__o43__ignore_message__to__25 -> O43__IGNORE_MESSAGE_25) |~| (set__o43__ignore_message__to__UNKNOWN -> O43__IGNORE_MESSAGE_UNKNOWN))
+
+O43__IGNORE_MESSAGE_0 = (is_0_o43__ignore_message -> O43__IGNORE_MESSAGE_0 |~| O43__IGNORE_MESSAGE_SET |~| STOP)
+O43__IGNORE_MESSAGE_1 = (O43__IGNORE_MESSAGE_SET |~| isnot_0_o43__ignore_message -> O43__IGNORE_MESSAGE_1)
+O43__IGNORE_MESSAGE_25 = (O43__IGNORE_MESSAGE_SET |~| isnot_0_o43__ignore_message -> O43__IGNORE_MESSAGE_25)
+O43__IGNORE_MESSAGE_OTHER = (O43__IGNORE_MESSAGE_SET |~| isnot_0_o43__ignore_message -> O43__IGNORE_MESSAGE_OTHER)
+
+
+--  start of file
+
+--  in TGI 6  Prio 0
+C424_B294 = C424_B296
+C424_B296 = C425_B306 ; C426_B388 ; C427_B300 ; C424_B295
+C424_B295 = SKIP
+
+C423_B402 = C423_B404
+C423_B404 = C428_B371 ; C423_B403
+C423_B403 = SKIP
+
+--  in TGI 5  Prio 1
+C419_B395 = C419_B397
+C419_B397 = C430_B319 ; C419_B396
+C419_B396 = SKIP
+
+--  in TGI 1  Prio 5
+C428_B371 = C428_B373
+C428_B373 = C429_B312 ; (C428_B374 |~| C428_B376)
+C428_B374 = (set__o43__ignore_message__to__1 -> SKIP ; INT_TGI_1) ; C428_B376
+C428_B376 = C429_B312 ; (C428_B377 |~| C428_B379)
+C428_B377 = (set__o43__ignore_message__to__25 -> SKIP ; INT_TGI_1) ; C428_B379
+C428_B379 = C428_B372
+--  in TGI 1  Prio 5
+C428_B372 = SKIP
+
+C430_B319 = C430_B321
+C430_B321 = (is_0_o43__ignore_message -> INT_TGI_5 ; C430_B322 |~| isnot_0_o43__ignore_message -> INT_TGI_5 ; C430_B323)
+--  in TGI 5  Prio 1
+C430_B323 = C430_B324
+C430_B322 = C430_B324
+C430_B324 = C430_B320
+C430_B320 = SKIP
+
+C429_B312 = C429_B314
+C429_B314 = C429_B313
+--  in TGI 1  Prio 5
+C429_B313 = SKIP
+
+C426_B388 = C426_B390
+C426_B390 = C426_B389
+--  in TGI 6  Prio 0
+C426_B389 = SKIP
+
+C427_B300 = C427_B302
+C427_B302 = C427_B301
+C427_B301 = SKIP
+
+C420_B332 = C420_B334
+C420_B334 = (is_0_o43__ignore_message -> INT_TGI_4 ; C420_B335 |~| isnot_0_o43__ignore_message -> INT_TGI_4 ; C420_B336)
+--  in TGI 4  Prio 2
+C420_B336 = C420_B337
+C420_B335 = C420_B337
+C420_B337 = C420_B333
+--  in TGI 4  Prio 2
+C420_B333 = SKIP
+
+C422_B358 = C422_B360
+C422_B360 = (is_0_o43__ignore_message -> INT_TGI_2 ; C422_B361 |~| isnot_0_o43__ignore_message -> INT_TGI_2 ; C422_B362)
+C422_B362 = (set__o43__ignore_message__to__UNKNOWN -> SKIP ; INT_TGI_2) ; C422_B363
+C422_B361 = ((dr_low -> INT_TGI_2 ; STOP)  |~| SKIP) ; C422_B363
+C422_B363 = C422_B359
+--  in TGI 2  Prio 4
+C422_B359 = SKIP
+
+C425_B306 = C425_B308
+C425_B308 = (set__o43__ignore_message__to__0 -> SKIP ; INT_TGI_6) ; C425_B307
+--  in TGI 6  Prio 0
+C425_B307 = SKIP
+
+C421_B345 = C421_B347
+C421_B347 = (is_0_o43__ignore_message -> INT_TGI_3 ; C421_B348 |~| isnot_0_o43__ignore_message -> INT_TGI_3 ; C421_B349)
+C421_B349 = ((dr_high -> INT_TGI_3 ; STOP)  |~| SKIP) ; C421_B350
+C421_B348 = C421_B350
+C421_B350 = C421_B346
+--  in TGI 3  Prio 3
+C421_B346 = SKIP
+TASK_TGI_5 = TASK_1
+INT_TGI_5 = INT_TASK_1
+TASK_1_ENTRY = C419_B395
+TASK_1 = TASK_1_ENTRY
+INT_TASK_1 = ((INT_TASK_0 |~| TASK_0) ; INT_TASK_1) |~| SKIP
+
+TASK_TGI_4 = TASK_2
+INT_TGI_4 = INT_TASK_2
+TASK_2_ENTRY = C420_B332
+TASK_2 = TASK_2_ENTRY
+INT_TASK_2 = ((INT_TASK_1 |~| TASK_1) ; INT_TASK_2) |~| SKIP
+
+TASK_TGI_3 = TASK_3
+INT_TGI_3 = INT_TASK_3
+TASK_3_ENTRY = C421_B345
+TASK_3 = TASK_3_ENTRY
+INT_TASK_3 = ((INT_TASK_2 |~| TASK_2) ; INT_TASK_3) |~| SKIP
+
+TASK_TGI_2 = TASK_4
+INT_TGI_2 = INT_TASK_4
+TASK_4_ENTRY = C422_B358
+TASK_4 = TASK_4_ENTRY
+INT_TASK_4 = ((INT_TASK_3 |~| TASK_3) ; INT_TASK_4) |~| SKIP
+
+TASK_TGI_1 = TASK_5
+INT_TGI_1 = INT_TASK_5
+TASK_5_ENTRY = C423_B402
+TASK_5 = TASK_5_ENTRY
+INT_TASK_5 = ((INT_TASK_4 |~| TASK_4) ; INT_TASK_5) |~| SKIP
+
+TASK_TGI_6 = SKIP
+INT_TGI_6 = INT_TASK_0
+TASK_0_ENTRY = SKIP
+TASK_0 = SKIP
+INT_TASK_0 = SKIP
+
+PROG1 = (PROG0 [|{is_0_o43__ignore_message, isnot_0_o43__ignore_message, set__o43__ignore_message__to__0, set__o43__ignore_message__to__1, set__o43__ignore_message__to__25, set__o43__ignore_message__to__UNKNOWN}|] O43__IGNORE_MESSAGE_UNKNOWN)  \ {is_0_o43__ignore_message, isnot_0_o43__ignore_message, set__o43__ignore_message__to__0, set__o43__ignore_message__to__1, set__o43__ignore_message__to__25, set__o43__ignore_message__to__UNKNOWN}
+PROG0 = TASK_4
+PROG = PROG1
+
+
+
+--  DR-Check:
+
+channel dr_low, dr_high
+
+RUNAB = dr_low -> RUNAB  |~|  dr_high -> RUNAB
+NODR = STOP |~| dr_low -> STOP |~| dr_low -> dr_low -> RUNAB |~| dr_high -> RUNAB
+
+assert NODR [T= PROG
+--  when this passes the Data-Race is excluded
+
+
+--  Parsing has completed succesfully.

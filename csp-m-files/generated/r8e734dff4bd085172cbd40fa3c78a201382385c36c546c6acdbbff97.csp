@@ -1,0 +1,114 @@
+--  Printing for f
+
+--  Variable o38__turn
+
+channel is_0_o38__turn, is_1_o38__turn
+channel isnot_0_o38__turn, isnot_1_o38__turn
+channel set__o38__turn__to__0, set__o38__turn__to__1
+
+
+O38__TURN_UNKNOWN = (O38__TURN_0 |~| O38__TURN_1 |~| O38__TURN_OTHER)
+
+O38__TURN_SET = (STOP |~| (set__o38__turn__to__0 -> O38__TURN_0) |~| (set__o38__turn__to__1 -> O38__TURN_1))
+
+O38__TURN_0 = (is_0_o38__turn -> O38__TURN_0 |~| O38__TURN_SET |~| STOP |~| isnot_1_o38__turn -> O38__TURN_0)
+O38__TURN_1 = (is_1_o38__turn -> O38__TURN_1 |~| O38__TURN_SET |~| isnot_0_o38__turn -> O38__TURN_1 |~| STOP)
+O38__TURN_OTHER = (O38__TURN_SET |~| isnot_0_o38__turn -> O38__TURN_OTHER |~| isnot_1_o38__turn -> O38__TURN_OTHER)
+
+
+--  start of file
+
+--  in TGI 4  Prio 0
+C340_B230 = C340_B232
+C340_B232 = C341_B244 ; C342_B322 ; C340_B233
+C340_B233 = C343_B238 ; C340_B231
+C340_B231 = SKIP
+
+C339_B285 = C339_B287
+C339_B287 = C345_B278 ; (C339_B288 |~| C339_B289)
+--  in TGI 1  Prio 3
+C339_B289 = (set__o38__turn__to__1 -> SKIP ; INT_TGI_1) ; C339_B290
+C339_B288 = (set__o38__turn__to__0 -> SKIP ; INT_TGI_1) ; C339_B290
+C339_B290 = C339_B286
+--  in TGI 1  Prio 3
+C339_B286 = SKIP
+
+C342_B322 = C342_B324
+C342_B324 = C344_B250 ; C342_B331
+C342_B331 = C342_B323
+C342_B323 = SKIP
+
+C345_B278 = C345_B280
+--  in TGI 1  Prio 3
+C345_B280 = C345_B279
+C345_B279 = SKIP
+
+C344_B250 = C344_B252
+--  in TGI 4  Prio 0
+C344_B252 = C344_B251
+C344_B251 = SKIP
+
+C337_B310 = C337_B312
+C337_B312 = (is_1_o38__turn -> INT_TGI_3 ; C337_B313 |~| isnot_1_o38__turn -> INT_TGI_3 ; C337_B315)
+C337_B313 = ((dr_high -> INT_TGI_3 ; STOP)  |~| SKIP) ; C337_B315
+C337_B315 = C337_B311
+--  in TGI 3  Prio 1
+C337_B311 = SKIP
+
+C343_B238 = C343_B240
+C343_B240 = C343_B239
+--  in TGI 4  Prio 0
+C343_B239 = SKIP
+
+C338_B298 = C338_B300
+C338_B300 = (is_0_o38__turn -> INT_TGI_2 ; C338_B301 |~| isnot_0_o38__turn -> INT_TGI_2 ; C338_B303)
+C338_B301 = ((dr_low -> INT_TGI_2 ; STOP)  |~| SKIP) ; C338_B303
+C338_B303 = C338_B299
+C338_B299 = SKIP
+
+--  in TGI 4  Prio 0
+C341_B244 = C341_B246
+C341_B246 = C341_B245
+C341_B245 = SKIP
+TASK_TGI_3 = TASK_1
+INT_TGI_3 = INT_TASK_1
+TASK_1_ENTRY = C337_B310
+TASK_1 = TASK_1_ENTRY
+INT_TASK_1 = ((INT_TASK_0 |~| TASK_0) ; INT_TASK_1) |~| SKIP
+
+TASK_TGI_2 = TASK_2
+INT_TGI_2 = INT_TASK_2
+TASK_2_ENTRY = C338_B298
+TASK_2 = TASK_2_ENTRY
+INT_TASK_2 = ((INT_TASK_1 |~| TASK_1) ; INT_TASK_2) |~| SKIP
+
+TASK_TGI_1 = TASK_3
+INT_TGI_1 = INT_TASK_3
+TASK_3_ENTRY = C339_B285
+TASK_3 = TASK_3_ENTRY
+INT_TASK_3 = ((INT_TASK_2 |~| TASK_2) ; INT_TASK_3) |~| SKIP
+
+TASK_TGI_4 = SKIP
+INT_TGI_4 = INT_TASK_0
+TASK_0_ENTRY = SKIP
+TASK_0 = SKIP
+INT_TASK_0 = SKIP
+
+PROG1 = (PROG0 [|{is_0_o38__turn, is_1_o38__turn, isnot_0_o38__turn, isnot_1_o38__turn, set__o38__turn__to__0, set__o38__turn__to__1}|] O38__TURN_UNKNOWN)  \ {is_0_o38__turn, is_1_o38__turn, isnot_0_o38__turn, isnot_1_o38__turn, set__o38__turn__to__0, set__o38__turn__to__1}
+PROG0 = TASK_2
+PROG = PROG1
+
+
+
+--  DR-Check:
+
+channel dr_low, dr_high
+
+RUNAB = dr_low -> RUNAB  |~|  dr_high -> RUNAB
+NODR = STOP |~| dr_low -> STOP |~| dr_low -> dr_low -> RUNAB |~| dr_high -> RUNAB
+
+assert NODR [T= PROG
+--  when this passes the Data-Race is excluded
+
+
+--  Parsing has completed succesfully.

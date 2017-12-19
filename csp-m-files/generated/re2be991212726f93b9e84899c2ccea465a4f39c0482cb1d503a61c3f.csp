@@ -1,0 +1,135 @@
+--  Variable o39__a
+
+channel is_0_o39__a
+channel isnot_0_o39__a
+channel set__o39__a__to__0, set__o39__a__to__1
+
+
+O39__A_UNKNOWN = (O39__A_0 |~| O39__A_1 |~| O39__A_OTHER)
+
+O39__A_SET = (STOP |~| (set__o39__a__to__0 -> O39__A_0) |~| (set__o39__a__to__1 -> O39__A_1))
+
+O39__A_0 = (is_0_o39__a -> O39__A_0 |~| O39__A_SET |~| STOP)
+O39__A_1 = (O39__A_SET |~| isnot_0_o39__a -> O39__A_1)
+O39__A_OTHER = (O39__A_SET |~| isnot_0_o39__a -> O39__A_OTHER)
+
+
+--  Variable o40__b
+
+channel is_0_o40__b
+channel isnot_0_o40__b
+channel set__o40__b__to__1
+
+
+O40__B_UNKNOWN = (O40__B_0 |~| O40__B_1 |~| O40__B_OTHER)
+
+O40__B_SET = (STOP |~| (set__o40__b__to__1 -> O40__B_1))
+
+O40__B_0 = (is_0_o40__b -> O40__B_0 |~| O40__B_SET |~| STOP)
+O40__B_1 = (O40__B_SET |~| isnot_0_o40__b -> O40__B_1)
+O40__B_OTHER = (O40__B_SET |~| isnot_0_o40__b -> O40__B_OTHER)
+
+
+--  Variable o41__c
+
+channel is_0_o41__c
+channel isnot_0_o41__c
+channel set__o41__c__to__0, set__o41__c__to__1
+
+
+O41__C_UNKNOWN = (O41__C_0 |~| O41__C_1 |~| O41__C_OTHER)
+
+O41__C_SET = (STOP |~| (set__o41__c__to__0 -> O41__C_0) |~| (set__o41__c__to__1 -> O41__C_1))
+
+O41__C_0 = (is_0_o41__c -> O41__C_0 |~| O41__C_SET |~| STOP)
+O41__C_1 = (O41__C_SET |~| isnot_0_o41__c -> O41__C_1)
+O41__C_OTHER = (O41__C_SET |~| isnot_0_o41__c -> O41__C_OTHER)
+
+
+--  start of file
+
+C378_B259 = C378_B261
+C378_B261 = C379_B273 ; C380_B314 ; C378_B262
+C378_B262 = C381_B267 ; C378_B260
+C378_B260 = SKIP
+
+C377_B336 = C377_B338
+C377_B338 = (set__o39__a__to__0 -> SKIP ; INT_TGI_1) ; (set__o41__c__to__1 -> SKIP ; INT_TGI_1) ; C377_B339
+C377_B339 = (is_0_o41__c -> C377_B342 |~| isnot_0_o41__c -> C377_B341)
+C377_B341 = ((dr_low -> INT_TGI_1 ; STOP)  |~| SKIP) ; C383_B307 ; (C377_B345 |~| C377_B347)
+C377_B345 = (set__o40__b__to__1 -> SKIP ; INT_TGI_1) ; (set__o39__a__to__1 -> SKIP ; INT_TGI_1) ; (set__o41__c__to__0 -> SKIP ; INT_TGI_1) ; C377_B347
+C377_B347 = C377_B339
+C377_B342 = C377_B337
+C377_B337 = SKIP
+
+C380_B314 = C380_B316
+C380_B316 = C382_B279 ; C380_B323
+C380_B323 = C380_B315
+C380_B315 = SKIP
+
+C383_B307 = C383_B309
+C383_B309 = C383_B308
+C383_B308 = SKIP
+
+C382_B279 = C382_B281
+C382_B281 = C382_B280
+C382_B280 = SKIP
+
+C375_B357 = C375_B359
+C375_B359 = (is_0_o39__a -> C375_B361 |~| isnot_0_o39__a -> C375_B360)
+C375_B361 = (is_0_o40__b -> C375_B364 |~| isnot_0_o40__b -> C375_B362)
+C375_B362 = C375_B364
+C375_B364 = C375_B365
+C375_B360 = ((dr_high -> INT_TGI_3 ; STOP)  |~| SKIP) ; C375_B365
+C375_B365 = C375_B358
+C375_B358 = SKIP
+
+C381_B267 = C381_B269
+C381_B269 = C381_B268
+C381_B268 = SKIP
+
+C376_B329 = C376_B331
+C376_B331 = C376_B330
+C376_B330 = SKIP
+
+C379_B273 = C379_B275
+C379_B275 = C379_B274
+C379_B274 = SKIP
+TASK_TGI_3 = TASK_1
+INT_TGI_3 = INT_TASK_1
+TASK_1_ENTRY = C375_B357
+TASK_1 = TASK_1_ENTRY
+INT_TASK_1 = ((INT_TASK_0 |~| TASK_0) ; INT_TASK_1) |~| SKIP
+
+TASK_TGI_2 = TASK_2
+INT_TGI_2 = INT_TASK_2
+TASK_2_ENTRY = C376_B329
+TASK_2 = TASK_2_ENTRY
+INT_TASK_2 = ((INT_TASK_1 |~| TASK_1) ; INT_TASK_2) |~| SKIP
+
+TASK_TGI_1 = TASK_3
+INT_TGI_1 = INT_TASK_3
+TASK_3_ENTRY = C377_B336
+TASK_3 = ((((((TASK_3_ENTRY) [|{is_0_o39__a, isnot_0_o39__a, set__o39__a__to__0, set__o39__a__to__1}|] O39__A_UNKNOWN)  \ {is_0_o39__a, isnot_0_o39__a, set__o39__a__to__0, set__o39__a__to__1}) [|{is_0_o40__b, isnot_0_o40__b, set__o40__b__to__1}|] O40__B_UNKNOWN)  \ {is_0_o40__b, isnot_0_o40__b, set__o40__b__to__1}) [|{is_0_o41__c, isnot_0_o41__c, set__o41__c__to__0, set__o41__c__to__1}|] O41__C_UNKNOWN)  \ {is_0_o41__c, isnot_0_o41__c, set__o41__c__to__0, set__o41__c__to__1}
+INT_TASK_3 = ((INT_TASK_2 |~| TASK_2) ; INT_TASK_3) |~| SKIP
+
+TASK_TGI_4 = TASK_0
+INT_TGI_4 = INT_TASK_0
+TASK_0_ENTRY = C378_B259
+TASK_0 = TASK_0_ENTRY
+INT_TASK_0 = SKIP
+
+
+
+--  DR-Check:
+
+channel dr_low, dr_high
+
+RUNAB = dr_low -> RUNAB  |~|  dr_high -> RUNAB
+NODR = STOP |~| dr_low -> STOP |~| dr_low -> dr_low -> RUNAB |~| dr_high -> RUNAB
+
+assert NODR [T= TASK_3
+--  when this passes the Data-Race is excluded
+
+
+--  Parsing has completed succesfully.

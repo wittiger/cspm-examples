@@ -1,0 +1,134 @@
+channel is_0_o49__state, is_1_o49__state, is_2_o49__state
+channel isnot_0_o49__state, isnot_1_o49__state, isnot_2_o49__state
+channel set__o49__state__to__0, set__o49__state__to__1, set__o49__state__to__2
+
+
+channel dr_low, dr_high
+
+O49__STATE_UNKNOWN = (O49__STATE_0 |~| O49__STATE_1 |~| O49__STATE_2 |~| O49__STATE_OTHER)
+
+O49__STATE_SET = (STOP |~| (set__o49__state__to__0 -> O49__STATE_0) |~| (set__o49__state__to__1 -> O49__STATE_1) |~| (set__o49__state__to__2 -> O49__STATE_2))
+
+O49__STATE_0 = (is_0_o49__state -> O49__STATE_0 |~| O49__STATE_SET |~| STOP |~| isnot_1_o49__state -> O49__STATE_0 |~| isnot_2_o49__state -> O49__STATE_0)
+O49__STATE_1 = (is_1_o49__state -> O49__STATE_1 |~| O49__STATE_SET |~| isnot_0_o49__state -> O49__STATE_1 |~| STOP |~| isnot_2_o49__state -> O49__STATE_1)
+O49__STATE_2 = (is_2_o49__state -> O49__STATE_2 |~| O49__STATE_SET |~| isnot_0_o49__state -> O49__STATE_2 |~| isnot_1_o49__state -> O49__STATE_2 |~| STOP)
+O49__STATE_OTHER = (O49__STATE_SET |~| isnot_0_o49__state -> O49__STATE_OTHER |~| isnot_1_o49__state -> O49__STATE_OTHER |~| isnot_2_o49__state -> O49__STATE_OTHER)
+
+
+--  start of file
+
+--  in TGI 4  Prio 0
+C444_B300 = C444_B302
+C444_B302 = C445_B314 ; C446_B362 ; C444_B303
+C444_B303 = C447_B308 ; C444_B301
+C444_B301 = SKIP
+
+C443_B427 = C443_B429
+C443_B429 = C449_B399 ; C443_B428
+--  in TGI 1  Prio 3
+C443_B428 = SKIP
+
+C446_B362 = C446_B364
+C446_B364 = C448_B320 ; C446_B371
+--  in TGI 4  Prio 0
+C446_B371 = C446_B363
+C446_B363 = SKIP
+
+C449_B399 = C449_B401
+C449_B401 = (set__o49__state__to__0 -> SKIP ; INT_TGI_1) ; ((dr_low -> INT_TGI_1 ; STOP)  |~| SKIP) ; (set__o49__state__to__1 -> SKIP ; INT_TGI_1) ; C449_B402
+C449_B402 = C449_B404
+C449_B404 = ((is_1_o49__state -> INT_TGI_1 ; C449_B408) |~| (isnot_1_o49__state -> INT_TGI_1 ; C449_B409))
+--  in TGI 1  Prio 3
+C449_B408 = C450_B355 ; C449_B410
+C449_B410 = C449_B402
+C449_B409 = C449_B410
+--  in TGI 1  Prio 3
+C449_B405 = C449_B400
+C449_B400 = SKIP
+
+C442_B420 = C442_B422
+C442_B422 = C451_B377 ; C442_B421
+C442_B421 = SKIP
+
+C451_B377 = C451_B379
+--  in TGI 2  Prio 2
+C451_B379 = (is_0_o49__state -> INT_TGI_2 ; C451_B382 |~| isnot_0_o49__state -> INT_TGI_2 ; C451_B380)
+C451_B380 = ((dr_high -> INT_TGI_2 ; STOP)  |~| SKIP) ; C451_B382
+C451_B382 = (is_2_o49__state -> INT_TGI_2 ; C451_B385 |~| isnot_2_o49__state -> INT_TGI_2 ; C451_B383)
+--  in TGI 2  Prio 2
+C451_B383 = C451_B385
+C451_B385 = C452_B348 ; (C451_B386 |~| C451_B388)
+C451_B386 = (set__o49__state__to__2 -> SKIP ; INT_TGI_2) ; C451_B388
+C451_B388 = C451_B378
+C451_B378 = SKIP
+
+C448_B320 = C448_B322
+--  in TGI 4  Prio 0
+C448_B322 = C448_B321
+C448_B321 = SKIP
+
+C452_B348 = C452_B350
+--  in TGI 2  Prio 2
+C452_B350 = C452_B349
+C452_B349 = SKIP
+
+C441_B434 = C441_B436
+C441_B436 = C441_B435
+C441_B435 = SKIP
+
+C447_B308 = C447_B310
+--  in TGI 4  Prio 0
+C447_B310 = C447_B309
+C447_B309 = SKIP
+
+C450_B355 = C450_B357
+--  in TGI 1  Prio 3
+C450_B357 = C450_B356
+C450_B356 = SKIP
+
+C445_B314 = C445_B316
+C445_B316 = C445_B315
+C445_B315 = SKIP
+TASK_TGI_3 = TASK_1
+INT_TGI_3 = INT_TASK_1
+TASK_1_ENTRY = C441_B434
+TASK_1 = TASK_1_ENTRY
+INT_TASK_1 = ((INT_TASK_0 |~| TASK_0) ; INT_TASK_1) |~| SKIP
+
+TASK_TGI_2 = TASK_2
+INT_TGI_2 = INT_TASK_2
+TASK_2_ENTRY = C442_B420
+TASK_2 = TASK_2_ENTRY
+INT_TASK_2 = ((INT_TASK_1 |~| TASK_1) ; INT_TASK_2) |~| SKIP
+
+TASK_TGI_1 = TASK_3
+INT_TGI_1 = INT_TASK_3
+TASK_3_ENTRY = C443_B427
+TASK_3 = ((TASK_3_ENTRY) [|{is_0_o49__state, is_1_o49__state, is_2_o49__state, isnot_0_o49__state, isnot_1_o49__state, isnot_2_o49__state, set__o49__state__to__0, set__o49__state__to__1, set__o49__state__to__2}|] O49__STATE_UNKNOWN)  \ {is_0_o49__state, is_1_o49__state, is_2_o49__state, isnot_0_o49__state, isnot_1_o49__state, isnot_2_o49__state, set__o49__state__to__0, set__o49__state__to__1, set__o49__state__to__2}
+
+T3 = ((TASK_3_ENTRY) [|{is_0_o49__state, is_1_o49__state, is_2_o49__state, isnot_0_o49__state, isnot_1_o49__state, isnot_2_o49__state, set__o49__state__to__0, set__o49__state__to__1, set__o49__state__to__2}|] O49__STATE_UNKNOWN)
+
+TSET3 = ((TASK_3_ENTRY) [|{is_0_o49__state, is_1_o49__state, is_2_o49__state, isnot_0_o49__state, isnot_1_o49__state, isnot_2_o49__state, set__o49__state__to__0, set__o49__state__to__1, set__o49__state__to__2}|] O49__STATE_UNKNOWN)  \ {is_0_o49__state, is_1_o49__state, is_2_o49__state, isnot_0_o49__state, isnot_1_o49__state, isnot_2_o49__state, dr_low, dr_high}
+
+
+INT_TASK_3 = ((INT_TASK_2 |~| TASK_2) ; INT_TASK_3) |~| SKIP
+
+TASK_TGI_4 = TASK_0
+INT_TGI_4 = INT_TASK_0
+TASK_0_ENTRY = C444_B300
+TASK_0 = TASK_0_ENTRY
+INT_TASK_0 = SKIP
+
+
+
+--  DR-Check:
+
+
+RUNAB = dr_low -> RUNAB  |~|  dr_high -> RUNAB
+NODR = STOP |~| dr_low -> STOP |~| dr_low -> dr_low -> RUNAB |~| dr_high -> RUNAB
+
+assert NODR [T= TASK_3
+--  when this passes the Data-Race is excluded
+
+
+--  Parsing has completed succesfully.
