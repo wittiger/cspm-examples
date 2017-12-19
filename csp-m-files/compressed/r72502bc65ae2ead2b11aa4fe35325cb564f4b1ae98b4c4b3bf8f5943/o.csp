@@ -1,0 +1,19 @@
+
+--  Declarations:
+
+channel isnot_3_o45__hw_loop_status, is_3_o45__hw_loop_status, dr_low, set__o45__hw_loop_status__to__UNKNOWN, dr_high, set__o45__hw_loop_status__to__0, set__o45__hw_loop_status__to__3
+--  Process Definitions:
+
+P1000 = (P1001 |~| (isnot_3_o45__hw_loop_status -> P1000))
+P1002 = ((dr_high -> P1002) |~| (dr_low -> P1002))
+P1003 = ((dr_low -> (dr_low -> P1002)) |~| (dr_high -> P1002) |~| (dr_low -> STOP))
+P1004 = ((is_3_o45__hw_loop_status -> P1004) |~| P1001)
+P1005 = (P1004 |~| P1006 |~| P1000)
+P1007 = ((P1005 [| {isnot_3_o45__hw_loop_status, is_3_o45__hw_loop_status, set__o45__hw_loop_status__to__UNKNOWN, set__o45__hw_loop_status__to__0, set__o45__hw_loop_status__to__3} |] ((SKIP |~| ((dr_low -> SKIP) ; STOP)) ; ((isnot_3_o45__hw_loop_status -> SKIP) |~| (is_3_o45__hw_loop_status -> SKIP)))) \ {isnot_3_o45__hw_loop_status, is_3_o45__hw_loop_status, set__o45__hw_loop_status__to__UNKNOWN, set__o45__hw_loop_status__to__0, set__o45__hw_loop_status__to__3})
+P1006 = ((isnot_3_o45__hw_loop_status -> P1006) |~| P1001)
+P1001 = ((set__o45__hw_loop_status__to__UNKNOWN -> P1005) |~| (set__o45__hw_loop_status__to__3 -> P1004) |~| (set__o45__hw_loop_status__to__0 -> P1000))
+
+--  Assertion:
+
+assert P1003 [T= P1007
+

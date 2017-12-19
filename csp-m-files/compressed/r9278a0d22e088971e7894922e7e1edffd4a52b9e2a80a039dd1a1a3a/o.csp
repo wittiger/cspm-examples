@@ -1,0 +1,26 @@
+
+--  Declarations:
+
+channel is_1_o41__b, dr_high, isnot_1_o40__a, isnot_2_o41__b, isnot_1_o41__b, is_2_o40__a, is_1_o40__a, dr_low, is_2_o41__b, isnot_2_o40__a
+--  Process Definitions:
+
+P1000 = ((isnot_2_o40__a -> SKIP) |~| ((is_2_o40__a -> SKIP) ; (((is_2_o41__b -> SKIP) ; P1001) |~| (isnot_2_o41__b -> SKIP))))
+P1002 = (((P1003 |~| P1004 |~| P1005) [| {is_1_o41__b, isnot_2_o41__b, isnot_1_o41__b, is_2_o41__b} |] (((P1006 |~| P1007 |~| P1008) [| {isnot_1_o40__a, is_2_o40__a, is_1_o40__a, isnot_2_o40__a} |] (((isnot_1_o40__a -> P1009) ; P1010) |~| ((is_1_o40__a -> P1009) ; (((is_2_o41__b -> P1009) ; (P1011 ; P1010)) |~| ((isnot_2_o41__b -> P1009) ; P1010))))) \ {isnot_1_o40__a, is_2_o40__a, is_1_o40__a, isnot_2_o40__a})) \ {is_1_o41__b, isnot_2_o41__b, isnot_1_o41__b, is_2_o41__b})
+P1012 = (SKIP |~| ((SKIP |~| ((isnot_1_o40__a -> SKIP) ; P1000) |~| ((is_1_o40__a -> SKIP) ; (((isnot_1_o41__b -> SKIP) ; P1000) |~| ((is_1_o41__b -> SKIP) ; (P1001 ; P1000))))) ; P1012))
+P1005 = ((isnot_2_o41__b -> P1005) |~| (isnot_1_o41__b -> P1005))
+P1008 = ((is_2_o40__a -> P1008) |~| (isnot_1_o40__a -> P1008))
+P1010 = ((isnot_2_o40__a -> P1009) |~| ((is_2_o40__a -> P1009) ; ((isnot_1_o41__b -> P1009) |~| ((is_1_o41__b -> P1009) ; P1011))))
+P1006 = ((isnot_1_o40__a -> P1006) |~| (isnot_2_o40__a -> P1006))
+P1004 = ((isnot_1_o41__b -> P1004) |~| (is_2_o41__b -> P1004))
+P1007 = ((isnot_2_o40__a -> P1007) |~| (is_1_o40__a -> P1007))
+P1003 = ((isnot_2_o41__b -> P1003) |~| (is_1_o41__b -> P1003))
+P1013 = ((dr_high -> P1013) |~| (dr_low -> P1013))
+P1001 = (((dr_high -> SKIP) ; STOP) |~| SKIP)
+P1009 = (SKIP |~| ((P1012 |~| SKIP) ; P1009))
+P1014 = ((dr_low -> (dr_low -> P1013)) |~| (dr_low -> STOP) |~| (dr_high -> P1013))
+P1011 = (SKIP |~| ((dr_low -> P1009) ; STOP))
+
+--  Assertion:
+
+assert P1014 [T= P1002
+

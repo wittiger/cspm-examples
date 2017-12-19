@@ -1,0 +1,15 @@
+
+--  Declarations:
+
+channel dr_high, dr_low
+--  Process Definitions:
+
+P1000 = (((SKIP |~| ((dr_high -> SKIP) ; STOP)) ; P1000) |~| SKIP)
+P1001 = ((dr_low -> STOP) |~| (dr_high -> P1002) |~| (dr_low -> (dr_low -> P1002)))
+P1002 = ((dr_high -> P1002) |~| (dr_low -> P1002))
+P1003 = (((dr_low -> P1000) ; STOP) |~| SKIP)
+
+--  Assertion:
+
+assert P1001 [T= P1003
+

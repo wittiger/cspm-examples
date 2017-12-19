@@ -1,0 +1,29 @@
+
+--  Declarations:
+
+channel isnot_20_o38__f, is_20_o38__f, dr_low, set__o38__f__to__10, set__o39__g__to__1, dr_high, set__o38__f__to__20, set__o39__g__to__2, is_2_o39__g, set__o38__f__to__1, set__o39__g__to__17, isnot_2_o39__g
+--  Process Definitions:
+
+P1000 = ((SKIP |~| ((dr_low -> P1001) ; STOP)) ; (((((set__o38__f__to__10 -> SKIP) ; P1001) ; ((set__o39__g__to__2 -> SKIP) ; P1001)) ; P1000) |~| ((((set__o39__g__to__1 -> SKIP) ; P1001) ; ((set__o38__f__to__20 -> SKIP) ; P1001)) ; P1000)))
+P1002 = (P1003 |~| (isnot_2_o39__g -> P1002))
+P1004 = (P1003 |~| (isnot_2_o39__g -> P1004))
+P1001 = (((P1005 |~| P1006) ; P1001) |~| SKIP)
+P1006 = (SKIP |~| ((SKIP |~| P1007) ; P1006))
+P1008 = ((is_2_o39__g -> P1008) |~| P1003)
+P1009 = (P1010 |~| (isnot_20_o38__f -> P1009))
+P1005 = ((isnot_20_o38__f -> P1005) |~| (is_20_o38__f -> ((isnot_2_o39__g -> P1005) |~| (is_2_o39__g -> ((((dr_high -> P1006) ; STOP) |~| SKIP) ; P1005)))))
+P1011 = ((isnot_20_o38__f -> P1011) |~| P1010)
+P1012 = (P1010 |~| (isnot_20_o38__f -> P1012))
+P1003 = ((set__o39__g__to__2 -> P1008) |~| (set__o39__g__to__17 -> P1013) |~| (set__o39__g__to__1 -> P1004))
+P1007 = (SKIP |~| ((((set__o38__f__to__1 -> SKIP) ; (set__o39__g__to__17 -> SKIP)) |~| SKIP) ; P1007))
+P1013 = ((isnot_2_o39__g -> P1013) |~| P1003)
+P1010 = ((set__o38__f__to__10 -> P1011) |~| (set__o38__f__to__1 -> P1009) |~| (set__o38__f__to__20 -> P1014))
+P1015 = ((dr_high -> P1015) |~| (dr_low -> P1015))
+P1016 = (((P1008 |~| P1002 |~| P1004 |~| P1013) [| {set__o39__g__to__1, set__o39__g__to__2, is_2_o39__g, set__o39__g__to__17, isnot_2_o39__g} |] (((P1014 |~| P1012 |~| P1011 |~| P1009) [| {isnot_20_o38__f, is_20_o38__f, set__o38__f__to__10, set__o38__f__to__20, set__o38__f__to__1} |] P1000) \ {isnot_20_o38__f, is_20_o38__f, set__o38__f__to__10, set__o38__f__to__20, set__o38__f__to__1})) \ {set__o39__g__to__1, set__o39__g__to__2, is_2_o39__g, set__o39__g__to__17, isnot_2_o39__g})
+P1017 = ((dr_low -> (dr_low -> P1015)) |~| (dr_low -> STOP) |~| (dr_high -> P1015))
+P1014 = ((is_20_o38__f -> P1014) |~| P1010)
+
+--  Assertion:
+
+assert P1017 [T= P1016
+

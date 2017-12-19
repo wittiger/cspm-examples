@@ -1,0 +1,19 @@
+
+--  Declarations:
+
+channel isnot_1_o38__turn, isnot_0_o38__turn, set__o38__turn__to__1, is_1_o38__turn, dr_high, is_0_o38__turn, set__o38__turn__to__0, dr_low
+--  Process Definitions:
+
+P1000 = (P1001 |~| (is_0_o38__turn -> P1000) |~| (isnot_1_o38__turn -> P1000))
+P1001 = ((set__o38__turn__to__0 -> P1000) |~| (set__o38__turn__to__1 -> P1002))
+P1003 = (((((is_1_o38__turn -> SKIP) ; (((dr_high -> SKIP) ; STOP) |~| SKIP)) |~| (isnot_1_o38__turn -> SKIP) |~| SKIP) ; P1003) |~| SKIP)
+P1004 = ((dr_high -> P1004) |~| (dr_low -> P1004))
+P1005 = ((dr_low -> STOP) |~| (dr_high -> P1004) |~| (dr_low -> (dr_low -> P1004)))
+P1002 = (P1001 |~| (isnot_0_o38__turn -> P1002) |~| (is_1_o38__turn -> P1002))
+P1006 = (((P1002 |~| P1000 |~| P1007) [| {isnot_1_o38__turn, isnot_0_o38__turn, set__o38__turn__to__1, is_1_o38__turn, is_0_o38__turn, set__o38__turn__to__0} |] ((isnot_0_o38__turn -> P1003) |~| ((is_0_o38__turn -> P1003) ; (SKIP |~| ((dr_low -> P1003) ; STOP))))) \ {isnot_1_o38__turn, isnot_0_o38__turn, set__o38__turn__to__1, is_1_o38__turn, is_0_o38__turn, set__o38__turn__to__0})
+P1007 = (P1001 |~| (isnot_0_o38__turn -> P1007) |~| (isnot_1_o38__turn -> P1007))
+
+--  Assertion:
+
+assert P1005 [T= P1006
+

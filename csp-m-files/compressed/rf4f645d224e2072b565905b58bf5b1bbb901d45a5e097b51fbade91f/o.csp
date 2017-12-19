@@ -1,0 +1,19 @@
+
+--  Declarations:
+
+channel set__o43__f__to__1, dr_high, set__o43__f__to__0, is_0_o43__f, isnot_0_o43__f, dr_low
+--  Process Definitions:
+
+P1000 = (P1001 |~| (isnot_0_o43__f -> P1000))
+P1002 = (P1001 |~| (is_0_o43__f -> P1002))
+P1003 = ((dr_low -> STOP) |~| (dr_high -> P1004) |~| (dr_low -> (dr_low -> P1004)))
+P1005 = (((SKIP |~| (isnot_0_o43__f -> SKIP) |~| ((is_0_o43__f -> SKIP) ; (((dr_high -> SKIP) ; STOP) |~| SKIP))) ; P1005) |~| SKIP)
+P1004 = ((dr_high -> P1004) |~| (dr_low -> P1004))
+P1006 = (((P1000 |~| P1002 |~| P1007) [| {set__o43__f__to__1, set__o43__f__to__0, is_0_o43__f, isnot_0_o43__f} |] (SKIP |~| ((dr_low -> P1005) ; STOP))) \ {set__o43__f__to__1, set__o43__f__to__0, is_0_o43__f, isnot_0_o43__f})
+P1001 = ((set__o43__f__to__1 -> P1000) |~| (set__o43__f__to__0 -> P1002))
+P1007 = ((isnot_0_o43__f -> P1007) |~| P1001)
+
+--  Assertion:
+
+assert P1003 [T= P1006
+

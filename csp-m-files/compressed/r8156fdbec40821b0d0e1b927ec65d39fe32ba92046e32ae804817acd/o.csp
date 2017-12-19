@@ -1,0 +1,20 @@
+
+--  Declarations:
+
+channel isnot_1_o41__s, is_1_o41__s, set__o41__s__to__UNKNOWN, is_2_o41__s, dr_high, dr_low, isnot_2_o41__s
+--  Process Definitions:
+
+P1000 = (SKIP |~| ((((is_2_o41__s -> SKIP) ; (((dr_high -> SKIP) ; STOP) |~| SKIP)) |~| (isnot_2_o41__s -> SKIP) |~| SKIP) ; P1000))
+P1001 = (P1002 |~| P1003 |~| P1004)
+P1003 = ((isnot_1_o41__s -> P1003) |~| (isnot_2_o41__s -> P1003) |~| P1005)
+P1006 = ((dr_high -> P1006) |~| (dr_low -> P1006))
+P1007 = ((P1001 [| {isnot_1_o41__s, is_1_o41__s, set__o41__s__to__UNKNOWN, is_2_o41__s, isnot_2_o41__s} |] (((is_1_o41__s -> P1000) ; (((dr_low -> P1000) ; STOP) |~| SKIP)) |~| (isnot_1_o41__s -> P1000))) \ {isnot_1_o41__s, is_1_o41__s, set__o41__s__to__UNKNOWN, is_2_o41__s, isnot_2_o41__s})
+P1002 = (P1005 |~| (is_2_o41__s -> P1002) |~| (isnot_1_o41__s -> P1002))
+P1008 = ((dr_low -> STOP) |~| (dr_high -> P1006) |~| (dr_low -> (dr_low -> P1006)))
+P1005 = (set__o41__s__to__UNKNOWN -> P1001)
+P1004 = ((is_1_o41__s -> P1004) |~| P1005 |~| (isnot_2_o41__s -> P1004))
+
+--  Assertion:
+
+assert P1008 [T= P1007
+

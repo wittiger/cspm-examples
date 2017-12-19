@@ -1,0 +1,23 @@
+
+--  Declarations:
+
+channel set__o43__ignore_message__to__25, set__o43__ignore_message__to__UNKNOWN, isnot_0_o43__ignore_message, dr_high, set__o43__ignore_message__to__0, dr_low, set__o43__ignore_message__to__1, is_0_o43__ignore_message
+--  Process Definitions:
+
+P1000 = ((dr_low -> (dr_low -> P1001)) |~| (dr_low -> STOP) |~| (dr_high -> P1001))
+P1002 = ((set__o43__ignore_message__to__25 -> P1003) |~| (set__o43__ignore_message__to__UNKNOWN -> P1004) |~| (set__o43__ignore_message__to__0 -> P1005) |~| (set__o43__ignore_message__to__1 -> P1006))
+P1003 = (P1002 |~| (isnot_0_o43__ignore_message -> P1003))
+P1007 = (SKIP |~| (((isnot_0_o43__ignore_message -> SKIP) |~| SKIP |~| (is_0_o43__ignore_message -> SKIP)) ; P1007))
+P1006 = (P1002 |~| (isnot_0_o43__ignore_message -> P1006))
+P1008 = (SKIP |~| (((is_0_o43__ignore_message -> P1007) |~| P1007 |~| (isnot_0_o43__ignore_message -> P1007)) ; P1008))
+P1001 = ((dr_low -> P1001) |~| (dr_high -> P1001))
+P1005 = ((is_0_o43__ignore_message -> P1005) |~| P1002)
+P1009 = ((P1004 [| {set__o43__ignore_message__to__25, set__o43__ignore_message__to__UNKNOWN, isnot_0_o43__ignore_message, set__o43__ignore_message__to__0, set__o43__ignore_message__to__1, is_0_o43__ignore_message} |] ((is_0_o43__ignore_message -> P1010) |~| ((isnot_0_o43__ignore_message -> P1010) ; (((set__o43__ignore_message__to__UNKNOWN -> SKIP) ; P1010) ; (SKIP |~| ((dr_low -> P1010) ; STOP)))))) \ {set__o43__ignore_message__to__25, set__o43__ignore_message__to__UNKNOWN, isnot_0_o43__ignore_message, set__o43__ignore_message__to__0, set__o43__ignore_message__to__1, is_0_o43__ignore_message})
+P1004 = (P1006 |~| P1003 |~| P1011 |~| P1005)
+P1010 = (SKIP |~| ((P1008 |~| ((isnot_0_o43__ignore_message -> P1008) ; (SKIP |~| ((dr_high -> P1008) ; STOP))) |~| (is_0_o43__ignore_message -> P1008)) ; P1010))
+P1011 = (P1002 |~| (isnot_0_o43__ignore_message -> P1011))
+
+--  Assertion:
+
+assert P1000 [T= P1009
+

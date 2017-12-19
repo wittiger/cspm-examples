@@ -1,0 +1,29 @@
+
+--  Declarations:
+
+channel set__o39__a__to__1, is_0_o40__b, set__o41__c__to__1, set__o40__b__to__1, isnot_0_o41__c, isnot_0_o40__b, is_0_o41__c, dr_high, set__o39__a__to__0, is_0_o39__a, dr_low, isnot_0_o39__a, set__o41__c__to__0
+--  Process Definitions:
+
+P1000 = (set__o40__b__to__1 -> P1001)
+P1002 = ((dr_low -> P1002) |~| (dr_high -> P1002))
+P1003 = ((dr_low -> (dr_low -> P1002)) |~| (dr_high -> P1002) |~| (dr_low -> STOP))
+P1004 = (SKIP |~| ((((((dr_high -> SKIP) ; STOP) |~| SKIP) ; ((isnot_0_o39__a -> SKIP) |~| (is_0_o39__a -> ((is_0_o40__b -> SKIP) |~| (isnot_0_o40__b -> SKIP))))) |~| SKIP) ; P1004))
+P1005 = ((set__o39__a__to__1 -> P1006) |~| (set__o39__a__to__0 -> P1007))
+P1008 = (SKIP |~| ((P1004 |~| SKIP) ; P1008))
+P1009 = ((isnot_0_o40__b -> P1009) |~| P1000)
+P1010 = ((isnot_0_o39__a -> P1010) |~| P1005)
+P1011 = ((isnot_0_o41__c -> (P1011 |~| (((((set__o40__b__to__1 -> SKIP) ; P1008) ; ((set__o39__a__to__1 -> SKIP) ; P1008)) ; ((set__o41__c__to__0 -> SKIP) ; P1008)) ; P1011))) |~| (is_0_o41__c -> SKIP))
+P1012 = ((isnot_0_o41__c -> P1012) |~| P1013)
+P1006 = (P1005 |~| (isnot_0_o39__a -> P1006))
+P1001 = (P1000 |~| (isnot_0_o40__b -> P1001))
+P1013 = ((set__o41__c__to__0 -> P1014) |~| (set__o41__c__to__1 -> P1012))
+P1015 = (((P1014 |~| P1016 |~| P1012) [| {set__o41__c__to__1, isnot_0_o41__c, is_0_o41__c, set__o41__c__to__0} |] (((P1017 |~| P1009 |~| P1001) [| {is_0_o40__b, set__o40__b__to__1, isnot_0_o40__b} |] (((P1006 |~| P1010 |~| P1007) [| {set__o39__a__to__0, set__o39__a__to__1, is_0_o39__a, isnot_0_o39__a} |] ((((SKIP |~| ((dr_low -> P1008) ; STOP)) ; ((set__o39__a__to__0 -> SKIP) ; P1008)) ; ((set__o41__c__to__1 -> SKIP) ; P1008)) ; P1011)) \ {set__o39__a__to__0, set__o39__a__to__1, is_0_o39__a, isnot_0_o39__a})) \ {is_0_o40__b, set__o40__b__to__1, isnot_0_o40__b})) \ {set__o41__c__to__1, isnot_0_o41__c, is_0_o41__c, set__o41__c__to__0})
+P1007 = ((is_0_o39__a -> P1007) |~| P1005)
+P1016 = ((isnot_0_o41__c -> P1016) |~| P1013)
+P1017 = ((is_0_o40__b -> P1017) |~| P1000)
+P1014 = ((is_0_o41__c -> P1014) |~| P1013)
+
+--  Assertion:
+
+assert P1003 [T= P1015
+

@@ -1,0 +1,23 @@
+
+--  Declarations:
+
+channel dr_low, is_2_o49__state, isnot_2_o49__state, dr_high, set__o49__state__to__0, isnot_0_o49__state, is_0_o49__state, isnot_1_o49__state, set__o49__state__to__2, set__o49__state__to__1, is_1_o49__state
+--  Process Definitions:
+
+P1000 = ((isnot_1_o49__state -> P1000) |~| (is_1_o49__state -> P1000))
+P1001 = (((P1002 |~| P1003 |~| P1004 |~| P1005) [| {is_2_o49__state, isnot_2_o49__state, set__o49__state__to__0, isnot_0_o49__state, is_0_o49__state, isnot_1_o49__state, set__o49__state__to__2, set__o49__state__to__1, is_1_o49__state} |] (((((set__o49__state__to__0 -> SKIP) ; P1006) ; (SKIP |~| ((dr_low -> P1006) ; STOP))) ; ((set__o49__state__to__1 -> SKIP) ; P1006)) ; P1000)) \ {is_2_o49__state, isnot_2_o49__state, set__o49__state__to__0, isnot_0_o49__state, is_0_o49__state, isnot_1_o49__state, set__o49__state__to__2, set__o49__state__to__1, is_1_o49__state})
+P1003 = ((isnot_2_o49__state -> P1003) |~| (isnot_1_o49__state -> P1003) |~| (is_0_o49__state -> P1003) |~| P1007)
+P1008 = ((set__o49__state__to__2 -> SKIP) |~| SKIP)
+P1004 = (P1007 |~| (isnot_1_o49__state -> P1004) |~| (isnot_0_o49__state -> P1004) |~| (is_2_o49__state -> P1004))
+P1005 = ((is_1_o49__state -> P1005) |~| (isnot_2_o49__state -> P1005) |~| P1007 |~| (isnot_0_o49__state -> P1005))
+P1002 = ((isnot_1_o49__state -> P1002) |~| (isnot_0_o49__state -> P1002) |~| P1007 |~| (isnot_2_o49__state -> P1002))
+P1006 = ((((isnot_0_o49__state -> ((((dr_high -> SKIP) ; STOP) |~| SKIP) ; P1009)) |~| SKIP |~| (is_0_o49__state -> P1009)) ; P1006) |~| SKIP)
+P1010 = ((dr_low -> P1010) |~| (dr_high -> P1010))
+P1011 = ((dr_high -> P1010) |~| (dr_low -> (dr_low -> P1010)) |~| (dr_low -> STOP))
+P1009 = ((is_2_o49__state -> P1008) |~| (isnot_2_o49__state -> P1008))
+P1007 = ((set__o49__state__to__2 -> P1004) |~| (set__o49__state__to__0 -> P1003) |~| (set__o49__state__to__1 -> P1005))
+
+--  Assertion:
+
+assert P1011 [T= P1001
+

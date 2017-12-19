@@ -1,0 +1,23 @@
+
+--  Declarations:
+
+channel set__o38__f__to__23, is_23_o38__f, set__o38__f__to__1, dr_low, isnot_23_o38__f, dr_high
+--  Process Definitions:
+
+P1000 = (((SKIP |~| (set__o38__f__to__23 -> SKIP)) ; P1000) |~| SKIP)
+P1001 = (((P1000 |~| SKIP) ; P1001) |~| SKIP)
+P1002 = ((is_23_o38__f -> ((SKIP |~| ((dr_low -> P1003) ; STOP)) ; P1002)) |~| (isnot_23_o38__f -> P1002))
+P1004 = (P1005 |~| (isnot_23_o38__f -> P1004))
+P1006 = ((isnot_23_o38__f -> P1006) |~| P1005)
+P1007 = ((is_23_o38__f -> ((SKIP |~| ((dr_high -> P1001) ; STOP)) ; P1007)) |~| (isnot_23_o38__f -> P1007))
+P1008 = ((is_23_o38__f -> P1008) |~| P1005)
+P1009 = ((dr_low -> (dr_low -> P1010)) |~| (dr_high -> P1010) |~| (dr_low -> STOP))
+P1003 = (((P1007 |~| P1001) ; P1003) |~| SKIP)
+P1005 = ((set__o38__f__to__23 -> P1008) |~| (set__o38__f__to__1 -> P1006))
+P1010 = ((dr_high -> P1010) |~| (dr_low -> P1010))
+P1011 = (((P1004 |~| P1006 |~| P1008) [| {set__o38__f__to__23, is_23_o38__f, set__o38__f__to__1, isnot_23_o38__f} |] (((set__o38__f__to__1 -> SKIP) ; P1003) ; P1002)) \ {set__o38__f__to__23, is_23_o38__f, set__o38__f__to__1, isnot_23_o38__f})
+
+--  Assertion:
+
+assert P1009 [T= P1011
+

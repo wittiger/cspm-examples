@@ -1,0 +1,23 @@
+
+--  Declarations:
+
+channel set__o31__a__to__1, set__o31__a__to__0, is_0_o31__a, dr_low, isnot_0_o31__a, dr_high
+--  Process Definitions:
+
+P1000 = (P1001 |~| (isnot_0_o31__a -> P1000))
+P1002 = (SKIP |~| ((P1003 |~| SKIP) ; P1002))
+P1004 = (((is_0_o31__a -> P1005) ; (((((dr_low -> P1005) ; STOP) |~| SKIP) ; ((set__o31__a__to__1 -> SKIP) ; P1005)) ; ((set__o31__a__to__0 -> SKIP) ; P1005))) |~| ((isnot_0_o31__a -> P1005) ; P1004))
+P1006 = (((P1000 |~| P1007 |~| P1008) [| {set__o31__a__to__1, set__o31__a__to__0, is_0_o31__a, isnot_0_o31__a} |] P1004) \ {set__o31__a__to__1, set__o31__a__to__0, is_0_o31__a, isnot_0_o31__a})
+P1007 = (P1001 |~| (is_0_o31__a -> P1007))
+P1009 = ((dr_low -> STOP) |~| (dr_low -> (dr_low -> P1010)) |~| (dr_high -> P1010))
+P1003 = (SKIP |~| (((set__o31__a__to__0 -> SKIP) |~| SKIP) ; P1003))
+P1005 = (((P1002 |~| P1011) ; P1005) |~| SKIP)
+P1011 = (((is_0_o31__a -> P1002) ; (((SKIP |~| ((dr_high -> P1002) ; STOP)) ; ((set__o31__a__to__1 -> SKIP) ; P1002)) ; ((set__o31__a__to__0 -> SKIP) ; P1002))) |~| ((isnot_0_o31__a -> P1002) ; P1011))
+P1001 = ((set__o31__a__to__1 -> P1000) |~| (set__o31__a__to__0 -> P1007))
+P1010 = ((dr_high -> P1010) |~| (dr_low -> P1010))
+P1008 = ((isnot_0_o31__a -> P1008) |~| P1001)
+
+--  Assertion:
+
+assert P1009 [T= P1006
+
